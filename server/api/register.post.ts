@@ -1,0 +1,52 @@
+import { PrismaClient } from '@prisma/client';
+import { hash as argonHash } from 'argon2';
+import { generateRandomString } from '../../utils/generateRandomString';
+
+const prisma = new PrismaClient();
+
+export default defineEventHandler(async (event) => {
+    const body = await readBody(event);
+
+    const username = body.username;
+    const password = body.password;
+
+    if (!username || !password) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Missing username or password',
+        });
+    }
+
+    const existingUser = await prisma.user.findFirst({
+        where: {
+            username,
+        },
+    });
+
+    if (existingUser) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Username already exists',
+        });
+    }
+
+    const passwordHash = await argonHash(password);
+    const rememberMeToken = generateRandomString(32);
+
+    const user = await prisma.user.create({
+        data: {
+            username,
+            password: passwordHash,
+            rememberMeToken,
+        },
+    });
+
+    setCookie(event, 'rememberMeToken', rememberMeToken);
+
+    return {
+        data: {
+            id: user.id,
+            username: user.username,
+        },
+    };
+});
