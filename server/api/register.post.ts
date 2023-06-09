@@ -41,7 +41,12 @@ export default defineEventHandler(async (event) => {
         },
     });
 
-    setCookie(event, 'rememberMeToken', rememberMeToken);
+    setCookie(event, 'rememberMeToken', rememberMeToken, {
+        secure: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        httpOnly: true,
+        sameSite: 'lax',
+    });
 
     return {
         data: {
