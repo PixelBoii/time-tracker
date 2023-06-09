@@ -1,6 +1,8 @@
 export function useFetchApi(url: string, options = {}) {
+    const config = useRuntimeConfig();
+
     return useFetch(url, {
-        baseURL: 'http://localhost:3000/api',
+        baseURL: `${config.baseApiUrl}/api`,
         headers: {
             cookie: useRequestHeaders(['cookie']).cookie ?? '',
         },
