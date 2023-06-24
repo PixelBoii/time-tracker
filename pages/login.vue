@@ -31,7 +31,7 @@
             type="submit"
             class="w-full mt-6"
         >
-            Wide Login!
+            Login
         </Button>
 
         <p class="text-red-500 mt-4" v-if="error"> {{ error }}. Can't make any sense of the error? Me neither. </p>

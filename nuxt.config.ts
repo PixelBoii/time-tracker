@@ -4,6 +4,8 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
     ],
     runtimeConfig: {
-        baseApiUrl: process.env.NUXT_API_BASE_URL ?? 'http://localhost:3000',
+        public: {
+            baseApiUrl: process.env.NUXT_API_BASE_URL ?? 'http://localhost:3000',
+        },
     },
 });

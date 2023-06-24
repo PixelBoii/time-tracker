@@ -8,7 +8,7 @@
 
     <div>
         <div class="flex items-center justify-between">
-            <p class="text-white font-semibold text-2xl"> Welcome {{ shuffledUsername }}! I got that right, right? </p>
+            <p class="text-white font-semibold text-2xl capitalize"> Welcome {{ user.username }}! </p>
 
             <Button
                 type="button"
@@ -73,7 +73,7 @@
             v-else
             class="mt-6"
         >
-            <p class="text-gray-300 font-semibold text-lg"> You have no time records yet, common {{ shuffledUsername }} L </p>
+            <p class="text-gray-300 font-semibold text-lg"> You have no time records yet. </p>
         </div>
     </div>
 </template>
@@ -170,17 +170,4 @@ async function logout() {
 }
 
 const activeTimer = computed(() => timeRecords.value && timeRecords.value.data.find(record => record.status === TimeRecordStatus.STARTED));
-
-const shuffledUsername = useState('shuffledUsername', () => {
-    const user = useState('user');
-
-    return user.value.username.split('').sort(() => {
-        // 40% chance of mixing up the username
-        if (Math.random() > 0.6) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }).join('');
-});
 </script>
