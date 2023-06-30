@@ -110,7 +110,7 @@ const {
 });
 
 if (!user.value) {
-    navigateTo('/login');
+    navigateTo('/');
 }
 
 function editTimeRecord(record) {
