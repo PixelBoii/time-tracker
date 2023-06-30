@@ -48,6 +48,13 @@
                             </DialogTitle>
 
                             <div class="mt-6">
+                                <input
+                                    v-model="form.name"
+                                    type="text"
+                                    class="w-full rounded-lg bg-white text-gray-700 px-4 py-2"
+                                    placeholder="Time Record Name"
+                                />
+
                                 <div class="mt-3">
                                     <label class="block text-sm font-medium text-white">
                                         Start at
@@ -136,6 +143,7 @@ async function save() {
         await $fetch(`/api/time-records/${props.record.id}`, {
             method: 'PATCH',
             body: {
+                name: form.value.name,
                 startAt: form.value.startAt ? form.value.startAt.toISOString() : null,
                 stopAt: form.value.stopAt ? form.value.stopAt.toISOString() : null,
             },
@@ -150,6 +158,7 @@ async function save() {
 
 watch(() => props.record, (record) => {
     form.value = {
+        name: record?.name,
         startAt: record?.startAt ? dayjs(record.startAt) : null,
         stopAt: record?.stopAt ? dayjs(record.stopAt) : null,
     };

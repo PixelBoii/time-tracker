@@ -7,6 +7,7 @@ const allowedFields = [
     'status',
     'startAt',
     'stopAt',
+    'name',
 ];
 
 export default defineEventHandler(async (event) => {
