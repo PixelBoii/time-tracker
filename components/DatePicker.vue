@@ -5,15 +5,17 @@
         @update:model-value="e => emit('update:modelValue', e)"
         v-slot="{ prevViewMonth, nextViewMonth, viewDate }"
     >
-        <DatePickerButton as="template">
-            <Button
-                type="button"
-                class="w-full bg-white text-gray-700"
-                :color="null"
-            >
-                {{ modelValue ? modelValue.format('DD/MM/YYYY HH:mm') : 'Select date' }}
-            </Button>
-        </DatePickerButton>
+        <div class="flex space-x-2">
+            <DatePickerInput
+                class="w-full bg-white text-gray-700 px-3 py-2 rounded-lg font-semibold"
+                format="YYYY-MM-DD"
+            />
+
+            <DatePickerInput
+                class="w-full bg-white text-gray-700 px-3 py-2 rounded-lg font-semibold"
+                format="HH:mm"
+            />
+        </div>
 
         <Transition
             enter-from-class="opacity-0 scale-95"
@@ -113,7 +115,7 @@
 <script setup>
 import dayjs from 'dayjs';
 import {
-    DatePicker, DatePickerButton, DatePickerCalendarItem, DatePickerPanel, DatePickerView,
+    DatePicker, DatePickerInput, DatePickerCalendarItem, DatePickerPanel, DatePickerView,
 } from 'vue-headless-datepicker';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid';
 

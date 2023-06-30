@@ -24,6 +24,6 @@
     "argon2": "^0.30.3",
     "dayjs": "^1.11.8",
     "uncrypto": "^0.1.3",
-    "vue-headless-datepicker": "^0.0.8"
+    "vue-headless-datepicker": "^0.0.11"
   }
 }
