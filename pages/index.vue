@@ -2,7 +2,7 @@
     <LogInModal v-model:open="modals.login.open" />
     <RegisterModal v-model:open="modals.register.open" />
 
-    <div>
+    <div class="container mx-auto py-20 px-12">
         <p class="text-4xl font-bold mb-4 text-gray-100"> Welcome to the time tracker! </p>
         <p class="font-semibold text-gray-300"> Convincing banner description here. I bet you think this is a template, but it isn't. </p>
 

@@ -1,51 +1,93 @@
 <template>
-    <div>
-        <div class="flex items-center justify-between">
-            <p class="text-white font-semibold text-2xl capitalize"> Welcome {{ user.username }}! </p>
+    <div class="flex flex-col h-screen">
+        <div class="bg-gray-700 border-b-2 border-gray-600 px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="w-1/3">
+                    <p class="text-gray-100 font-semibold text-lg capitalize">
+                        {{ dayjs().format('dddd, MMMM D') }}
+                    </p>
+                </div>
 
-            <Button
-                type="button"
-                color="red"
-                @click="logout"
-            >
-                Logout
-            </Button>
-        </div>
+                <div class="w-1/3 flex items-center justify-center">
+                    <Listbox
+                        :model-value="route.name"
+                        @update:model-value="name => navigateTo({ name })"
+                    >
+                        <div class="relative">
+                            <ListboxButton as="template">
+                                <Button class="flex items-center justify-between space-x-2">
+                                    <span> {{ views[route.name] }} </span>
 
-        <div class="mt-6 w-full bg-gray-700 px-6 py-4 rounded-lg">
-            <Button
-                v-if="activeTimer"
-                type="button"
-                color="orange"
-                @click="stopTimer"
-            >
-                Stop Time Tracker
-            </Button>
+                                    <ChevronUpDownIcon class="h-5 w-5 text-white" />
+                                </Button>
+                            </ListboxButton>
 
-            <Button
-                v-else
-                type="button"
-                @click="startTimer"
-            >
-                Start Time Tracker
-            </Button>
+                            <Transition
+                                enter-active-class="transition ease-out duration-100"
+                                enter-from-class="opacity-0 scale-95"
+                                enter-to-class="opacity-100 scale-100"
+                                leave-active-class="transition ease-in duration-75"
+                                leave-from-class="opacity-100 scale-100"
+                                leave-to-class="opacity-0 scale-95"
+                            >
+                                <ListboxOptions class="absolute mt-1 bg-gray-600 py-1 rounded-lg w-36 text-white z-10">
+                                    <ListboxOption
+                                        v-for="(view, key) in views"
+                                        :key="key"
+                                        :value="key"
+                                        v-slot="{ selected }"
+                                        class="cursor-pointer bg-gray-600 hover:bg-gray-500 py-2 px-3 rounded-lg relative"
+                                    >
+                                        {{ view }}
+
+                                        <span
+                                            v-if="selected"
+                                            class="absolute inset-y-0 right-0 flex items-center pr-3 text-white"
+                                        >
+                                            <CheckIcon class="h-5 w-5" />
+                                        </span>
+                                    </ListboxOption>
+                                </ListboxOptions>
+                            </Transition>
+                        </div>
+                    </Listbox>
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 w-1/3">
+                    <Button
+                        v-if="activeTimer"
+                        type="button"
+                        color="orange"
+                        @click="stopTimer"
+                    >
+                        Stop Time Tracker
+                    </Button>
+
+                    <Button
+                        v-else
+                        type="button"
+                        @click="startTimer"
+                    >
+                        Start Time Tracker
+                    </Button>
+
+                    <Button
+                        type="button"
+                        color="red"
+                        @click="logout"
+                    >
+                        Logout
+                    </Button>
+                </div>
+            </div>
         </div>
 
         <div
             v-if="timeRecords && timeRecords.data.length"
-            class="mt-3"
+            class="pt-2 grow"
         >
-            <div class="flex items-center justify-end">
-                <button
-                    type="button"
-                    class="bg-gray-600 border-2 border-indigo-500 text-white font-semibold px-6 py-2 rounded-lg mb-3 w-full"
-                >
-                    Day View
-                </button>
-            </div>
-
-            <TimeRecordDayView
-                :time-records="timeRecords.data"
+            <NuxtPage
+                :time-records="timeRecords"
                 @refresh-time-records="refreshTimeRecords"
             />
         </div>
@@ -54,13 +96,27 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import TimeRecordStatus from "../enums/TimeRecordStatus";
+import {
+    Listbox,
+    ListboxButton,
+    ListboxOptions,
+    ListboxOption,
+} from '@headlessui/vue';
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/24/solid';
+
+import TimeRecordStatus from '../enums/TimeRecordStatus';
 
 definePageMeta({
     middleware: ['logged-in'],
 });
 
 const user = useState('user');
+const route = useRoute();
+
+const views = {
+    'dashboard-day': 'Day View',
+    'dashboard-week': 'Week View',
+};
 
 const {
     data: timeRecords,
