@@ -172,7 +172,7 @@ watch(() => props.record, (record) => {
         name: record?.name,
         startAt: record?.startAt ? dayjs(record.startAt) : null,
         stopAt: record?.stopAt ? dayjs(record.stopAt) : null,
-        notes: record?.notes,
+        notes: record.notes ?? undefined,
     };
 }, { immediate: true });
 </script>
