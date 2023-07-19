@@ -5,6 +5,7 @@
 <script setup>
 import StarterKit from '@tiptap/starter-kit';
 import { useEditor, EditorContent } from '@tiptap/vue-3';
+import Link from '@tiptap/extension-link';
 
 const props = defineProps({
     modelValue: {
@@ -18,10 +19,11 @@ const emit = defineEmits(['update:modelValue']);
 const editor = useEditor({
     extensions: [
         StarterKit,
+        Link,
     ],
     editorProps: {
         attributes: {
-            class: 'prose-invert dark:prose prose-sm sm:prose-base focus:outline-none bg-white rounded-lg px-3 py-2',
+            class: 'prose-invert dark:prose prose-sm sm:prose-base focus:outline-none bg-white rounded-lg px-3 py-2 tip-tap-editor',
         },
     },
     content: props.modelValue,
@@ -40,3 +42,9 @@ watch(() => props.modelValue, (value) => {
     editor.value.commands.setContent(value, false);
 });
 </script>
+
+<style>
+.tip-tap-editor a {
+    @apply underline decoration-solid decoration-2 decoration-indigo-300 underline-offset-4;
+}
+</style>
