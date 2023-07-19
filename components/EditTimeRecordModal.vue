@@ -76,6 +76,16 @@
                                 </div>
                             </div>
 
+                            <div class="mt-6">
+                                <label class="block text-sm font-medium text-white mb-1">
+                                    Notes
+                                </label>
+
+                                <TipTapEditor
+                                    v-model="form.notes"
+                                />
+                            </div>
+
                             <div class="flex items-center justify-end w-full space-x-2 mt-6">
                                 <Button
                                     color="red"
@@ -146,6 +156,7 @@ async function save() {
                 name: form.value.name,
                 startAt: form.value.startAt ? form.value.startAt.toISOString() : null,
                 stopAt: form.value.stopAt ? form.value.stopAt.toISOString() : null,
+                notes: form.value.notes,
             },
         });
 
@@ -161,6 +172,7 @@ watch(() => props.record, (record) => {
         name: record?.name,
         startAt: record?.startAt ? dayjs(record.startAt) : null,
         stopAt: record?.stopAt ? dayjs(record.stopAt) : null,
+        notes: record?.notes,
     };
 }, { immediate: true });
 </script>
