@@ -83,8 +83,9 @@ const topLabelPadding = '3rem';
 
 const leftOffset = computed(() => {
     const startAt = dayjs(props.timeRecord.startAt);
+    const columnOffset = startAt.diff(calendarContext.startDate.value, 'days');
 
-    return [stringifyCalc(columnWidth.value), '*', startAt.day(), '+', '4.5rem'];
+    return [stringifyCalc(columnWidth.value), '*', columnOffset, '+', '4.5rem'];
 });
 
 const topOffset = computed(() => {

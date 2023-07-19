@@ -2,6 +2,7 @@
     <Calendar
         :columns="7"
         :time-records="timeRecords"
+        :start-date="calendarViewDate.clone().startOf('week')"
     >
         <template #content>
             <CalendarTimeRecord
@@ -24,6 +25,8 @@ const props = defineProps({
         required: true,
     },
 });
+
+const calendarViewDate = useCalendarViewDate();
 
 const matchingTimeRecords = computed(() => {
     return props.timeRecords.filter(record => {

@@ -2,13 +2,16 @@
     <Calendar
         :columns="1"
         :time-records="timeRecords"
+        :start-date="calendarViewDate"
     >
-        <CalendarTimeRecord
-            v-for="timeRecord in matchingTimeRecords"
-            :key="timeRecord.id"
-            :time-record="timeRecord"
-            @refresh-time-records="emit('refresh-time-records')"
-        />
+        <template #content>
+            <CalendarTimeRecord
+                v-for="timeRecord in matchingTimeRecords"
+                :key="timeRecord.id"
+                :time-record="timeRecord"
+                @refresh-time-records="emit('refresh-time-records')"
+            />
+        </template>
     </Calendar>
 </template>
 
@@ -23,6 +26,8 @@ const props = defineProps({
         required: true,
     },
 });
+
+const calendarViewDate = useCalendarViewDate();
 
 const matchingTimeRecords = computed(() => {
     return props.timeRecords.filter(record => {

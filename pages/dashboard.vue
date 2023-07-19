@@ -11,7 +11,7 @@
                 <div class="w-1/3 flex items-center justify-center space-x-2">
                     <Button
                         type="button"
-                        @click="calendarViewDate = calendarViewDate.subtract(1, 'day')"
+                        @click="viewBack"
                     >
                         <ArrowLeftIcon class="h-5 w-5 text-white" />
                     </Button>
@@ -23,7 +23,7 @@
                         <div class="relative">
                             <ListboxButton as="template">
                                 <Button class="flex items-center justify-between space-x-2">
-                                    <span> {{ views[route.name] }} </span>
+                                    <span class="capitalize"> {{ calendarView }} View </span>
 
                                     <ChevronUpDownIcon class="h-5 w-5 text-white" />
                                 </Button>
@@ -61,7 +61,7 @@
 
                     <Button
                         type="button"
-                        @click="calendarViewDate = calendarViewDate.add(1, 'day')"
+                        @click="viewForward"
                     >
                         <ArrowRightIcon class="h-5 w-5 text-white" />
                     </Button>
@@ -97,7 +97,7 @@
         </div>
 
         <div
-            v-if="timeRecords && timeRecords.data.length"
+            v-if="timeRecords"
             class="pt-2 grow"
         >
             <NuxtPage
@@ -126,7 +126,8 @@ definePageMeta({
 
 const user = useState('user');
 const route = useRoute();
-const calendarViewDate = useState('calendarViewDate', () => dayjs());
+const calendarViewDate = useCalendarViewDate();
+const calendarView = useCalendarView();
 
 const views = {
     'dashboard-day': 'Day View',
@@ -184,6 +185,14 @@ async function logout() {
     } catch (e) {
         alert(e.message);
     }
+}
+
+function viewBack() {
+    calendarViewDate.value = calendarViewDate.value.subtract(1, calendarView.value === 'day' ? 'day' : 'week');
+}
+
+function viewForward() {
+    calendarViewDate.value = calendarViewDate.value.add(1, calendarView.value === 'day' ? 'day' : 'week');
 }
 
 const activeTimer = computed(() => timeRecords.value && timeRecords.value.data.find(record => record.status === TimeRecordStatus.STARTED));

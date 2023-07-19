@@ -28,11 +28,11 @@
         >
             <div class="h-[3rem]">
                 <p class="text-gray-300 text-xs font-semibold text-center">
-                    {{ dayjs().day(index - 1).format('dddd') }} ({{ getHoursForDay(dayjs().day(index - 1)) }}H)
+                    {{ startDate.clone().add(index - 1, 'days').format('dddd') }} ({{ getHoursForDay(startDate.clone().add(index - 1, 'days')) }}H)
                 </p>
 
                 <div class="bg-indigo-500 h-6 w-6 rounded-full text-xs flex justify-center items-center text-white mx-auto mt-1">
-                    {{ dayjs().day(index - 1).format('D') }}
+                    {{ startDate.clone().add(index - 1, 'days').format('D') }}
                 </div>
             </div>
 
@@ -63,9 +63,14 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    startDate: {
+        type: dayjs.Dayjs,
+        default: () => dayjs(),
+    },
 });
 
 const columns = computed(() => props.columns);
+const startDate = computed(() => props.startDate);
 
 function getHoursForDay(day) {
     const minutes = props.timeRecords
@@ -84,5 +89,6 @@ function getHoursForDay(day) {
 
 provide('CalendarContext', {
     columns,
+    startDate,
 });
 </script>
