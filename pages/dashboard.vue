@@ -100,10 +100,7 @@
             v-if="timeRecords"
             class="pt-2 grow"
         >
-            <NuxtPage
-                :time-records="timeRecords"
-                @refresh-time-records="refreshTimeRecords"
-            />
+            <NuxtPage />
         </div>
     </div>
 </template>
@@ -144,6 +141,11 @@ const {
 if (!user.value) {
     navigateTo('/');
 }
+
+provide('CalendarDashboardContext', {
+    timeRecords,
+    refreshTimeRecords,
+});
 
 async function startTimer() {
     try {

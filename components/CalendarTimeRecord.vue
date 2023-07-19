@@ -2,8 +2,8 @@
     <EditTimeRecordModal
         v-model:open="modals.editTimeRecord.open"
         :record="timeRecord"
-        @removed="emit('refresh-time-records')"
-        @saved="emit('refresh-time-records')"
+        @removed="dashboardContext.refreshTimeRecords"
+        @saved="dashboardContext.refreshTimeRecords"
     />
 
     <div
@@ -40,8 +40,6 @@ import dayjs from 'dayjs';
 
 import TimeRecordStatus from '../enums/TimeRecordStatus';
 
-const emit = defineEmits(['refresh-time-records']);
-
 const props = defineProps({
     timeRecord: {
         type: Object,
@@ -53,6 +51,8 @@ const props = defineProps({
     },
 });
 
+
+const dashboardContext = inject('CalendarDashboardContext');
 const calendarContext = inject('CalendarContext');
 
 const modals = ref({

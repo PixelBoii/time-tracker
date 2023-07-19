@@ -1,6 +1,6 @@
 <template>
     <div
-        class="w-full bg-gray-800 relative grid divide-x divide-gray-700 h-full"
+        class="w-full bg-gray-800 relative grid divide-x divide-gray-700 h-full overflow-hidden"
         :style="{
             gridTemplateColumns: `max-content repeat(${columns}, minmax(0, 1fr))`,
         }"
