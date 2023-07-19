@@ -7,7 +7,11 @@
     />
 
     <div
-        class="time-record px-2 py-1 bg-indigo-500 min-h-0 text-white rounded-lg cursor-pointer absolute overflow-hidden hover:scale-105 hover:min-h-[2.4rem] transition"
+        class="time-record px-2 py-1 min-h-[1.4rem] text-white rounded-lg cursor-pointer absolute overflow-hidden hover:scale-105 hover:min-h-[2.4rem] transition"
+        :class="{
+            'bg-indigo-500': timeRecord.status === TimeRecordStatus.STOPPED,
+            'bg-orange-500': timeRecord.status === TimeRecordStatus.STARTED,
+        }"
         :style="{
             left: stringifyCalc(leftOffset),
             top: stringifyCalc(topOffset),
@@ -33,6 +37,8 @@
 
 <script setup>
 import dayjs from 'dayjs';
+
+import TimeRecordStatus from '../enums/TimeRecordStatus';
 
 const emit = defineEmits(['refresh-time-records']);
 
@@ -89,7 +95,7 @@ const topOffset = computed(() => {
 
 const height = computed(() => {
     const startAt = dayjs(props.timeRecord.startAt);
-    const stopAt = dayjs(props.timeRecord.stopAt);
+    const stopAt = props.timeRecord.stopAt ? dayjs(props.timeRecord.stopAt) : dayjs();
 
     return [stopAt.diff(startAt, 'minutes'), '*', stringifyCalc(minuteHeight.value)];
 });

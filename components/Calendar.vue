@@ -28,7 +28,7 @@
         >
             <div class="h-[3rem]">
                 <p class="text-gray-300 text-xs font-semibold text-center">
-                    {{ dayjs().day(index - 1).format('dddd') }}
+                    {{ dayjs().day(index - 1).format('dddd') }} ({{ getHoursForDay(dayjs().day(index - 1)) }}H)
                 </p>
 
                 <div class="bg-indigo-500 h-6 w-6 rounded-full text-xs flex justify-center items-center text-white mx-auto mt-1">
@@ -59,9 +59,28 @@ const props = defineProps({
         type: Number,
         required: true,
     },
+    timeRecords: {
+        type: Array,
+        required: true,
+    },
 });
 
 const columns = computed(() => props.columns);
+
+function getHoursForDay(day) {
+    const minutes = props.timeRecords
+        .filter(record => dayjs(record.startAt).isSame(day, 'day'))
+        .reduce((accumulator, record) => {
+            const startAt = dayjs(record.startAt);
+            const stopAt = record.stopAt ? dayjs(record.stopAt) : dayjs();
+
+            const minutes = stopAt.diff(startAt, 'minute');
+
+            return accumulator + minutes;
+        }, 0);
+
+    return Math.round(minutes / 60);
+}
 
 provide('CalendarContext', {
     columns,

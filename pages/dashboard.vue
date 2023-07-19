@@ -8,7 +8,14 @@
                     </p>
                 </div>
 
-                <div class="w-1/3 flex items-center justify-center">
+                <div class="w-1/3 flex items-center justify-center space-x-2">
+                    <Button
+                        type="button"
+                        @click="calendarViewDate = calendarViewDate.subtract(1, 'day')"
+                    >
+                        <ArrowLeftIcon class="h-5 w-5 text-white" />
+                    </Button>
+
                     <Listbox
                         :model-value="route.name"
                         @update:model-value="name => navigateTo({ name })"
@@ -51,6 +58,13 @@
                             </Transition>
                         </div>
                     </Listbox>
+
+                    <Button
+                        type="button"
+                        @click="calendarViewDate = calendarViewDate.add(1, 'day')"
+                    >
+                        <ArrowRightIcon class="h-5 w-5 text-white" />
+                    </Button>
                 </div>
 
                 <div class="flex items-center justify-end space-x-3 w-1/3">
@@ -102,7 +116,7 @@ import {
     ListboxOptions,
     ListboxOption,
 } from '@headlessui/vue';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/24/solid';
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/24/solid';
 
 import TimeRecordStatus from '../enums/TimeRecordStatus';
 
@@ -112,10 +126,11 @@ definePageMeta({
 
 const user = useState('user');
 const route = useRoute();
+const calendarViewDate = useState('calendarViewDate', () => dayjs());
 
 const views = {
     'dashboard-day': 'Day View',
-    'dashboard-week': 'Week View',
+    'dashboard': 'Week View',
 };
 
 const {
