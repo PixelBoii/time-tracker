@@ -4,7 +4,7 @@
             {{ calendarViewDate.format('MMMM D, YYYY') }}
         </p>
 
-        <div class="mt-3 my-2">
+        <div class="mt-3 space-y-2">
             <div
                 v-for="record in matchingTimeRecords"
                 :key="record.id"
