@@ -31,7 +31,12 @@
                     {{ startDate.clone().add(index - 1, 'days').format('dddd') }} ({{ getHoursForDay(startDate.clone().add(index - 1, 'days')) }}H)
                 </p>
 
-                <div class="bg-indigo-500 h-6 w-6 rounded-full text-xs flex justify-center items-center text-white mx-auto mt-1">
+                <div
+                    class="h-6 w-6 rounded-full text-xs flex justify-center items-center text-white mx-auto mt-1 font-semibold"
+                    :class="{
+                        'bg-indigo-500': startDate.clone().add(index - 1, 'days').isSame(dayjs(), 'day'),
+                    }"
+                >
                     {{ startDate.clone().add(index - 1, 'days').format('D') }}
                 </div>
             </div>

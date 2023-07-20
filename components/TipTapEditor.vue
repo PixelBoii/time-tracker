@@ -45,6 +45,6 @@ watch(() => props.modelValue, (value) => {
 
 <style>
 .tip-tap-editor a {
-    @apply underline decoration-solid decoration-2 decoration-indigo-300 underline-offset-4;
+    @apply underline decoration-solid decoration-2 decoration-indigo-300 underline-offset-4 cursor-pointer;
 }
 </style>
