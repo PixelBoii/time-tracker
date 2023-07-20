@@ -127,8 +127,9 @@ const calendarViewDate = useCalendarViewDate();
 const calendarView = useCalendarView();
 
 const views = {
-    'dashboard-day': 'Day View',
     'dashboard': 'Week View',
+    'dashboard-day': 'Day View',
+    'dashboard-report': 'Report View',
 };
 
 const {
@@ -190,11 +191,11 @@ async function logout() {
 }
 
 function viewBack() {
-    calendarViewDate.value = calendarViewDate.value.subtract(1, calendarView.value === 'day' ? 'day' : 'week');
+    calendarViewDate.value = calendarViewDate.value.subtract(1, calendarView.value === 'week' ? 'week' : 'day');
 }
 
 function viewForward() {
-    calendarViewDate.value = calendarViewDate.value.add(1, calendarView.value === 'day' ? 'day' : 'week');
+    calendarViewDate.value = calendarViewDate.value.add(1, calendarView.value === 'week' ? 'week' : 'day');
 }
 
 const activeTimer = computed(() => timeRecords.value && timeRecords.value.data.find(record => record.status === TimeRecordStatus.STARTED));
