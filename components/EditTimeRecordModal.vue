@@ -33,7 +33,7 @@
                         leave-to="opacity-0 scale-95"
                     >
                         <DialogPanel
-                            class="w-full max-w-md transform rounded-2xl bg-indigo-500 p-6 text-left align-middle shadow-xl transition-all"
+                            class="w-full max-w-xl transform rounded-2xl bg-indigo-600 p-6 text-left align-middle shadow-xl transition-all"
                         >
                             <button
                                 type="button"

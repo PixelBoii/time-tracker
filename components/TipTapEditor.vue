@@ -23,7 +23,7 @@ const editor = useEditor({
     ],
     editorProps: {
         attributes: {
-            class: 'prose-invert dark:prose prose-sm sm:prose-base focus:outline-none bg-white rounded-lg px-3 py-2 tip-tap-editor',
+            class: 'prose-invert dark:prose prose-sm sm:prose-base focus:outline-none bg-white rounded-lg px-3 py-2 tip-tap-editor sm:max-w-none',
         },
     },
     content: props.modelValue,
