@@ -28,7 +28,7 @@
         >
             <div class="h-[3rem]">
                 <p class="text-gray-300 text-xs font-semibold text-center">
-                    {{ startDate.clone().add(index - 1, 'days').format('dddd') }} ({{ getHoursForDay(startDate.clone().add(index - 1, 'days')) }}H)
+                    {{ startDate.clone().add(index - 1, 'days').format('dddd') }} ({{ getHoursForDay(startDate.clone().add(index - 1, 'days')) }})
                 </p>
 
                 <div
@@ -89,7 +89,12 @@ function getHoursForDay(day) {
             return accumulator + minutes;
         }, 0);
 
-    return Math.round(minutes / 60);
+    const hours = Math.floor(minutes / 60);
+
+    const extraMinutes = minutes % 60;
+    const extraMinutesString = extraMinutes < 10 ? `0${extraMinutes}` : extraMinutes;
+
+    return `${hours}h${extraMinutesString !== '00' ? ` ${extraMinutesString}min` : ''}`;
 }
 
 provide('CalendarContext', {
