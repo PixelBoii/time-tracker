@@ -30,7 +30,10 @@
                 class="bg-white rounded-lg px-3 py-2 w-full ring ring-offset-2 ring-indigo-300 absolute mt-4 z-10"
                 v-slot="{ daysInCurrentMonth }"
             >
-                <DatePickerView :order="0">
+                <DatePickerView
+                    view-role="calendar-month"
+                    :order="0"
+                >
                     <div class="relative">
                         <button class="absolute left-2 inset-y-0 my-auto">
                             <ChevronLeftIcon
@@ -76,6 +79,7 @@
 
                 <DatePickerView
                     class="grid grid-cols-2 gap-2"
+                    view-role="time"
                     :order="1"
                     :auto-next="false"
                 >
@@ -85,9 +89,9 @@
                             :key="`hour-${hour}`"
                             class="p-3 hover:bg-indigo-300 rounded-lg"
                             :class="{
-                                'bg-indigo-300': modelValue.hour() === hour - 1,
+                                'bg-indigo-300': modelValue?.hour() === hour - 1,
                             }"
-                            :value="modelValue.clone().hour(hour - 1)"
+                            :value="hourBase.hour(hour - 1)"
                         >
                             {{ hour - 1 }}
                         </DatePickerCalendarItem>
@@ -99,9 +103,9 @@
                             :key="`minute-${minute}`"
                             class="py-2 px-6 hover:bg-indigo-300 rounded-lg"
                             :class="{
-                                'bg-indigo-300': modelValue.minute() === minute,
+                                'bg-indigo-300': modelValue?.minute() === minute,
                             }"
-                            :value="modelValue.clone().minute(minute)"
+                            :value="hourBase.minute(minute)"
                         >
                             {{ minute }}
                         </DatePickerCalendarItem>
@@ -127,4 +131,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:modelValue']);
+
+const hourBase = computed(() => props.modelValue ? props.modelValue.clone() : dayjs());
 </script>
