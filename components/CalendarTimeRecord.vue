@@ -36,6 +36,7 @@
 </template>
 
 <script setup>
+import { useInterval } from '@vueuse/core';
 import dayjs from 'dayjs';
 
 import TimeRecordStatus from '../enums/TimeRecordStatus';
@@ -60,6 +61,9 @@ const modals = ref({
         open: false,
     },
 });
+
+// Date key that automatically increases every second. Used to force Vue to re-render the computed date values.
+const dateKey = useInterval(1000);
 
 function stringifyCalc(arr) {
     return `calc(${arr.join(' ')})`;
@@ -95,6 +99,9 @@ const topOffset = computed(() => {
 });
 
 const height = computed(() => {
+    // Re-render every second
+    dateKey.value;
+
     const startAt = dayjs(props.timeRecord.startAt);
     const stopAt = props.timeRecord.stopAt ? dayjs(props.timeRecord.stopAt) : dayjs();
 

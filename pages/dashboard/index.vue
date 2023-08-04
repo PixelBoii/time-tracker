@@ -34,6 +34,6 @@ const calendarContext = inject('CalendarDashboardContext');
 const calendarViewDate = useCalendarViewDate();
 
 const matchingTimeRecords = computed(() => calendarContext.timeRecords.value.data.filter(record => {
-    return dayjs(record.startAt).isSame(dayjs(), 'week');
+    return dayjs(record.startAt).isSame(calendarViewDate.value, 'week');
 }));
 </script>
