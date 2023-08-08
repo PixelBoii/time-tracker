@@ -57,6 +57,7 @@
 </template>
 
 <script setup>
+import { useInterval } from '@vueuse/core';
 import dayjs from 'dayjs';
 
 const props = defineProps({
@@ -74,10 +75,16 @@ const props = defineProps({
     },
 });
 
+// Date key that automatically increases every second. Used to force Vue to re-render the computed date values.
+const dateKey = useInterval(1000);
+
 const columns = computed(() => props.columns);
 const startDate = computed(() => props.startDate);
 
 function getHoursForDay(day) {
+    // Re-render every second
+    dateKey.value;
+
     const minutes = props.timeRecords
         .filter(record => dayjs(record.startAt).isSame(day, 'day'))
         .reduce((accumulator, record) => {
