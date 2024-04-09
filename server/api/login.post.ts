@@ -1,9 +1,11 @@
 import { verify as argonVerify } from "argon2";
+import { eq } from "drizzle-orm";
 import { generateRandomString } from "../../utils/generateRandomString";
-import { getPrismaClient } from "../../utils/getPrismaClient";
+import { getDb } from "../../utils/getDb";
+import { users } from "../../drizzle/schema";
 
 export default defineEventHandler(async (event) => {
-    const prisma = getPrismaClient(event);
+    const db = getDb(event);
 
     const body = await readBody(event);
 
@@ -17,10 +19,8 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    const existingUser = await prisma.user.findFirst({
-        where: {
-            username,
-        },
+    const existingUser = await db.query.users.findFirst({
+        where: eq(users.username, username),
     });
 
     if (!existingUser) {
@@ -33,14 +33,12 @@ export default defineEventHandler(async (event) => {
     if (!existingUser.rememberMeToken) {
         existingUser.rememberMeToken = generateRandomString(32);
 
-        await prisma.user.update({
-            where: {
-                id: existingUser.id,
-            },
-            data: {
+        await db
+            .update(users)
+            .set({
                 rememberMeToken: existingUser.rememberMeToken,
-            },
-        });
+            })
+            .where(eq(users.id, existingUser.id));
     }
 
     const passwordMatches = await argonVerify(existingUser.password, password);

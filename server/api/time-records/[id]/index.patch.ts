@@ -1,12 +1,14 @@
 import { getH3User } from "../../../../utils/getH3User";
-import { getPrismaClient } from "../../../../utils/getPrismaClient";
+import { getDb } from "../../../../utils/getDb";
 import {
     allowedFields,
     applySerialization,
 } from "../../../../utils/timeRecordHandling";
+import { eq } from "drizzle-orm";
+import { timeRecords } from "~/drizzle/schema";
 
 export default defineEventHandler(async (event) => {
-    const prisma = getPrismaClient(event);
+    const db = getDb(event);
 
     const id = Number(event.context.params?.id);
     const body = await readBody(event);
@@ -26,10 +28,8 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    const activeTimeRecord = await prisma.timeRecord.findFirst({
-        where: {
-            id,
-        },
+    const activeTimeRecord = await db.query.timeRecords.findFirst({
+        where: eq(timeRecords.id, id),
     });
 
     if (!activeTimeRecord) {
@@ -39,18 +39,19 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    const timeRecord = await prisma.timeRecord.update({
-        where: {
-            id,
-        },
-        data: applySerialization(
-            Object.fromEntries(
-                Object.entries(body).filter(([key]) =>
-                    allowedFields.includes(key),
+    const [timeRecord] = await db
+        .update(timeRecords)
+        .set(
+            applySerialization(
+                Object.fromEntries(
+                    Object.entries(body).filter(([key]) =>
+                        allowedFields.includes(key),
+                    ),
                 ),
             ),
-        ),
-    });
+        )
+        .where(eq(timeRecords.id, id))
+        .returning();
 
     return {
         data: timeRecord,

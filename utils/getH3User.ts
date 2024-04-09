@@ -1,7 +1,9 @@
-import { getPrismaClient } from "./getPrismaClient";
+import { eq } from "drizzle-orm";
+import { getDb } from "./getDb";
+import { users } from "../drizzle/schema";
 
 export function getH3User(event: any) {
-    const prisma = getPrismaClient(event);
+    const db = getDb(event);
 
     const rememberMeToken = getCookie(event, "rememberMeToken");
 
@@ -12,9 +14,7 @@ export function getH3User(event: any) {
         });
     }
 
-    return prisma.user.findFirst({
-        where: {
-            rememberMeToken,
-        },
+    return db.query.users.findFirst({
+        where: eq(users.rememberMeToken, rememberMeToken),
     });
 }

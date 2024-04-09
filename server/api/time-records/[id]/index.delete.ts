@@ -1,8 +1,10 @@
 import { getH3User } from "../../../../utils/getH3User";
-import { getPrismaClient } from "../../../../utils/getPrismaClient";
+import { getDb } from "../../../../utils/getDb";
+import { and, eq } from "drizzle-orm";
+import { timeRecords } from "~/drizzle/schema";
 
 export default defineEventHandler(async (event) => {
-    const prisma = getPrismaClient(event);
+    const db = getDb(event);
 
     const id = Number(event.context.params?.id);
     const user = await getH3User(event);
@@ -21,11 +23,8 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    const timeRecord = await prisma.timeRecord.findFirst({
-        where: {
-            userId: user.id,
-            id,
-        },
+    const timeRecord = await db.query.timeRecords.findFirst({
+        where: and(eq(timeRecords.userId, user.id), eq(timeRecords.id, id)),
     });
 
     if (!timeRecord) {
@@ -35,11 +34,7 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    await prisma.timeRecord.delete({
-        where: {
-            id,
-        },
-    });
+    await db.delete(timeRecords).where(eq(timeRecords.id, id));
 
     return {
         message: "Time record deleted",

@@ -127,8 +127,8 @@ async function handleSubmit(e) {
             body: Object.fromEntries(formData),
         });
 
+        await navigateTo("/dashboard");
         emit("update:open", false);
-        navigateTo("/dashboard");
     } catch (err) {
         error.value = err.message;
     }

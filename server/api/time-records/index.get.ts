@@ -1,9 +1,11 @@
+import { desc, eq } from "drizzle-orm";
 import { getH3User } from "../../../utils/getH3User";
-import { getPrismaClient } from "../../../utils/getPrismaClient";
+import { getDb } from "../../../utils/getDb";
 import { applyParsing } from "../../../utils/timeRecordHandling";
+import { timeRecords } from "../../../drizzle/schema";
 
 export default defineEventHandler(async (event) => {
-    const prisma = getPrismaClient(event);
+    const db = getDb(event);
 
     const user = await getH3User(event);
 
@@ -14,16 +16,12 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    const timeRecords = await prisma.timeRecord.findMany({
-        where: {
-            userId: user.id,
-        },
-        orderBy: {
-            createdAt: "desc",
-        },
+    const foundTimeRecords = await db.query.timeRecords.findMany({
+        where: eq(timeRecords.userId, user.id),
+        orderBy: desc(timeRecords.createdAt),
     });
 
     return {
-        data: timeRecords.map(applyParsing),
+        data: foundTimeRecords.map(applyParsing),
     };
 });

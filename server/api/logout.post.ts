@@ -1,8 +1,10 @@
+import { eq } from "drizzle-orm";
 import { getH3User } from "../../utils/getH3User";
-import { getPrismaClient } from "../../utils/getPrismaClient";
+import { getDb } from "../../utils/getDb";
+import { users } from "../../drizzle/schema";
 
 export default defineEventHandler(async (event) => {
-    const prisma = getPrismaClient(event);
+    const db = getDb(event);
 
     const user = await getH3User(event);
 
@@ -13,14 +15,12 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    await prisma.user.update({
-        where: {
-            id: user.id,
-        },
-        data: {
+    await db
+        .update(users)
+        .set({
             rememberMeToken: null,
-        },
-    });
+        })
+        .where(eq(users.id, user.id));
 
     setCookie(event, "rememberMeToken", "");
 

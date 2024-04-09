@@ -139,7 +139,7 @@ async function handleSubmit(e) {
             body: Object.fromEntries(formData),
         });
 
-        navigateTo("/dashboard");
+        await navigateTo("/dashboard");
     } catch (e) {
         error.value = e.message;
     }
