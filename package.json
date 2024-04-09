@@ -34,7 +34,7 @@
         "@tiptap/starter-kit": "^2.0.4",
         "@tiptap/vue-3": "^2.0.4",
         "@vueuse/core": "^10.1.2",
-        "argon2": "^0.40.1",
+        "bcryptjs": "^2.4.3",
         "dayjs": "^1.11.8",
         "dotenv": "^16.4.5",
         "drizzle-orm": "^0.29.5",

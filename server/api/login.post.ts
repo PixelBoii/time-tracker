@@ -1,4 +1,5 @@
-import { verify as argonVerify } from "argon2";
+// @ts-ignore
+import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { generateRandomString } from "../../utils/generateRandomString";
 import { getDb } from "../../utils/getDb";
@@ -41,7 +42,7 @@ export default defineEventHandler(async (event) => {
             .where(eq(users.id, existingUser.id));
     }
 
-    const passwordMatches = await argonVerify(existingUser.password, password);
+    const passwordMatches = bcrypt.compareSync(password, existingUser.password);
 
     if (!passwordMatches) {
         throw createError({

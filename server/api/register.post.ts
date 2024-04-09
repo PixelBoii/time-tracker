@@ -1,4 +1,5 @@
-import { hash as argonHash } from "argon2";
+// @ts-ignore
+import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { generateRandomString } from "../../utils/generateRandomString";
 import { getDb } from "../../utils/getDb";
@@ -30,7 +31,7 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-    const passwordHash = await argonHash(password);
+    const passwordHash = bcrypt.hashSync(password, 8);
     const rememberMeToken = generateRandomString(32);
 
     const [user] = await db
