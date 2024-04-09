@@ -2,7 +2,6 @@ import { getH3User } from "../../../../utils/getH3User";
 import { getDb } from "../../../../utils/getDb";
 import {
     allowedFields,
-    applySerialization,
 } from "../../../../utils/timeRecordHandling";
 import { eq } from "drizzle-orm";
 import { timeRecords } from "~/drizzle/schema";
@@ -42,11 +41,9 @@ export default defineEventHandler(async (event) => {
     const [timeRecord] = await db
         .update(timeRecords)
         .set(
-            applySerialization(
-                Object.fromEntries(
-                    Object.entries(body).filter(([key]) =>
-                        allowedFields.includes(key),
-                    ),
+            Object.fromEntries(
+                Object.entries(body).filter(([key]) =>
+                    allowedFields.includes(key),
                 ),
             ),
         )

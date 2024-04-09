@@ -18,7 +18,7 @@ export const timeRecords = sqliteTable("TimeRecord", {
     stopAt: text("stopAt"),
     status: text("status").notNull(),
     name: text("name"),
-    notes: text("notes"),
+    notes: text("notes", { mode: 'json' }),
     createdAt: text("createdAt")
         .notNull()
         .default(sql`CURRENT_TIMESTAMP`),

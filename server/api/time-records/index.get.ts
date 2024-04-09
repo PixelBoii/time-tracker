@@ -1,7 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { getH3User } from "../../../utils/getH3User";
 import { getDb } from "../../../utils/getDb";
-import { applyParsing } from "../../../utils/timeRecordHandling";
 import { timeRecords } from "../../../drizzle/schema";
 
 export default defineEventHandler(async (event) => {
@@ -22,6 +21,6 @@ export default defineEventHandler(async (event) => {
     });
 
     return {
-        data: foundTimeRecords.map(applyParsing),
+        data: foundTimeRecords,
     };
 });
