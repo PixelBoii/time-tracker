@@ -1,4 +1,4 @@
-import { getH3User } from '../../utils/getH3User';
+import { getH3User } from "../../utils/getH3User";
 
 export default defineEventHandler(async (event) => {
     const user = await getH3User(event);

@@ -24,22 +24,24 @@
         @mouseleave="hover = false"
     >
         <p class="text-gray-200 text-xs font-semibold">
-            {{ dayjs(timeRecord.startAt).format('HH:mm') }}-{{ timeRecord.stopAt ? dayjs(timeRecord.stopAt).format('HH:mm') : '...' }}
+            {{ dayjs(timeRecord.startAt).format("HH:mm") }}-{{
+                timeRecord.stopAt
+                    ? dayjs(timeRecord.stopAt).format("HH:mm")
+                    : "..."
+            }}
         </p>
 
-        <p
-            class="text-gray-200 text-sm font-semibold"
-        >
-            {{ timeRecord.name ?? 'Untitled Time Record' }}
+        <p class="text-gray-200 text-sm font-semibold">
+            {{ timeRecord.name ?? "Untitled Time Record" }}
         </p>
     </div>
 </template>
 
 <script setup>
-import { useInterval } from '@vueuse/core';
-import dayjs from 'dayjs';
+import { useInterval } from "@vueuse/core";
+import dayjs from "dayjs";
 
-import TimeRecordStatus from '../enums/TimeRecordStatus';
+import TimeRecordStatus from "../enums/TimeRecordStatus";
 
 const props = defineProps({
     timeRecord: {
@@ -52,9 +54,8 @@ const props = defineProps({
     },
 });
 
-
-const dashboardContext = inject('CalendarDashboardContext');
-const calendarContext = inject('CalendarContext');
+const dashboardContext = inject("CalendarDashboardContext");
+const calendarContext = inject("CalendarContext");
 
 const modals = ref({
     editTimeRecord: {
@@ -66,36 +67,50 @@ const modals = ref({
 const dateKey = useInterval(1000);
 
 function stringifyCalc(arr) {
-    return `calc(${arr.join(' ')})`;
+    return `calc(${arr.join(" ")})`;
 }
 
 const columnWidth = computed(() => {
     const columnPercentage = 100 / calendarContext.columns.value;
 
-    return ['(100% - 4.5rem)', '*', columnPercentage / 100];
+    return ["(100% - 4.5rem)", "*", columnPercentage / 100];
 });
 
 const rowHeight = computed(() => {
     const rowPercentage = 100 / 24;
 
-    return [stringifyCalc(['100%', '-', topLabelPadding]), '*', rowPercentage / 100];
+    return [
+        stringifyCalc(["100%", "-", topLabelPadding]),
+        "*",
+        rowPercentage / 100,
+    ];
 });
 
-const minuteHeight = computed(() => [stringifyCalc(rowHeight.value), '/', '60']);
+const minuteHeight = computed(() => [
+    stringifyCalc(rowHeight.value),
+    "/",
+    "60",
+]);
 
-const topLabelPadding = '3rem';
+const topLabelPadding = "3rem";
 
 const leftOffset = computed(() => {
     const startAt = dayjs(props.timeRecord.startAt);
-    const columnOffset = startAt.diff(calendarContext.startDate.value, 'days');
+    const columnOffset = startAt.diff(calendarContext.startDate.value, "days");
 
-    return [stringifyCalc(columnWidth.value), '*', columnOffset, '+', '4.5rem'];
+    return [stringifyCalc(columnWidth.value), "*", columnOffset, "+", "4.5rem"];
 });
 
 const topOffset = computed(() => {
     const startAt = dayjs(props.timeRecord.startAt);
 
-    return [startAt.diff(startAt.startOf('day'), 'minutes'), '*', stringifyCalc(minuteHeight.value), '+', topLabelPadding];
+    return [
+        startAt.diff(startAt.startOf("day"), "minutes"),
+        "*",
+        stringifyCalc(minuteHeight.value),
+        "+",
+        topLabelPadding,
+    ];
 });
 
 const height = computed(() => {
@@ -103,9 +118,15 @@ const height = computed(() => {
     dateKey.value;
 
     const startAt = dayjs(props.timeRecord.startAt);
-    const stopAt = props.timeRecord.stopAt ? dayjs(props.timeRecord.stopAt) : dayjs();
+    const stopAt = props.timeRecord.stopAt
+        ? dayjs(props.timeRecord.stopAt)
+        : dayjs();
 
-    return [stopAt.diff(startAt, 'minutes'), '*', stringifyCalc(minuteHeight.value)];
+    return [
+        stopAt.diff(startAt, "minutes"),
+        "*",
+        stringifyCalc(minuteHeight.value),
+    ];
 });
 
 function editTimeRecord() {
@@ -118,7 +139,7 @@ function editTimeRecord() {
 <style scoped>
 @keyframes scale-in {
     0% {
-        transform: scale(.7);
+        transform: scale(0.7);
         top: 0;
     }
 
@@ -128,6 +149,6 @@ function editTimeRecord() {
 }
 
 .time-record {
-    animation: scale-in .7s ease-in-out;
+    animation: scale-in 0.7s ease-in-out;
 }
 </style>

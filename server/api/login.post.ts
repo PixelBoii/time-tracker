@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { verify as argonVerify } from 'argon2';
-import { generateRandomString } from '../../utils/generateRandomString';
-
-const prisma = new PrismaClient();
+import { verify as argonVerify } from "argon2";
+import { generateRandomString } from "../../utils/generateRandomString";
+import { getPrismaClient } from "../../utils/getPrismaClient";
 
 export default defineEventHandler(async (event) => {
+    const prisma = getPrismaClient(event);
+
     const body = await readBody(event);
 
     const username = body.username;
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     if (!username || !password) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Missing username or password',
+            statusMessage: "Missing username or password",
         });
     }
 
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
     if (!existingUser) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Invalid username or password',
+            statusMessage: "Invalid username or password",
         });
     }
 
@@ -48,15 +48,15 @@ export default defineEventHandler(async (event) => {
     if (!passwordMatches) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Invalid username or password',
+            statusMessage: "Invalid username or password",
         });
     }
 
-    setCookie(event, 'rememberMeToken', existingUser.rememberMeToken, {
+    setCookie(event, "rememberMeToken", existingUser.rememberMeToken, {
         secure: true,
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: "lax",
     });
 
     return {
@@ -66,4 +66,3 @@ export default defineEventHandler(async (event) => {
         },
     };
 });
-

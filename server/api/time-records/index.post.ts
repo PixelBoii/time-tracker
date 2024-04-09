@@ -1,16 +1,16 @@
-import { PrismaClient } from '@prisma/client';
 import TimeRecordStatus from "../../../enums/TimeRecordStatus";
-import { getH3User } from '../../../utils/getH3User';
-
-const prisma = new PrismaClient();
+import { getH3User } from "../../../utils/getH3User";
+import { getPrismaClient } from "../../../utils/getPrismaClient";
 
 export default defineEventHandler(async (event) => {
+    const prisma = getPrismaClient(event);
+
     const user = await getH3User(event);
 
     if (!user) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Not logged in',
+            statusMessage: "Not logged in",
         });
     }
 
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     if (activeTimeRecords > 0) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Timer already started',
+            statusMessage: "Timer already started",
         });
     }
 

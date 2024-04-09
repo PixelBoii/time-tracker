@@ -1,4 +1,4 @@
 export default {
-    STARTED: 'STARTED',
-    STOPPED: 'STOPPED',
+    STARTED: "STARTED",
+    STOPPED: "STOPPED",
 };

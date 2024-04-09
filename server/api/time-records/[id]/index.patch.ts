@@ -1,17 +1,13 @@
-import { PrismaClient } from '@prisma/client';
-import { getH3User } from '../../../../utils/getH3User';
-
-const prisma = new PrismaClient();
-
-const allowedFields = [
-    'status',
-    'startAt',
-    'stopAt',
-    'name',
-    'notes',
-];
+import { getH3User } from "../../../../utils/getH3User";
+import { getPrismaClient } from "../../../../utils/getPrismaClient";
+import {
+    allowedFields,
+    applySerialization,
+} from "../../../../utils/timeRecordHandling";
 
 export default defineEventHandler(async (event) => {
+    const prisma = getPrismaClient(event);
+
     const id = Number(event.context.params?.id);
     const body = await readBody(event);
     const user = await getH3User(event);
@@ -19,14 +15,14 @@ export default defineEventHandler(async (event) => {
     if (!user) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Not logged in',
+            statusMessage: "Not logged in",
         });
     }
 
     if (!id) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'No id provided',
+            statusMessage: "No id provided",
         });
     }
 
@@ -39,7 +35,7 @@ export default defineEventHandler(async (event) => {
     if (!activeTimeRecord) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Timer could not be found',
+            statusMessage: "Timer could not be found",
         });
     }
 
@@ -47,9 +43,12 @@ export default defineEventHandler(async (event) => {
         where: {
             id,
         },
-        data: Object.fromEntries(
-            Object.entries(body)
-                .filter(([key]) => allowedFields.includes(key))
+        data: applySerialization(
+            Object.fromEntries(
+                Object.entries(body).filter(([key]) =>
+                    allowedFields.includes(key),
+                ),
+            ),
         ),
     });
 

@@ -4,28 +4,31 @@
             <div class="flex items-center justify-between">
                 <div class="w-1/3">
                     <p class="text-gray-100 font-semibold text-lg capitalize">
-                        {{ dayjs().format('dddd, MMMM D') }}
+                        {{ dayjs().format("dddd, MMMM D") }}
                     </p>
                 </div>
 
                 <div class="w-1/3 flex items-center justify-center space-x-2">
-                    <Button
-                        type="button"
-                        @click="viewBack"
-                    >
+                    <Button type="button" @click="viewBack">
                         <ArrowLeftIcon class="h-5 w-5 text-white" />
                     </Button>
 
                     <Listbox
                         :model-value="route.name"
-                        @update:model-value="name => navigateTo({ name })"
+                        @update:model-value="(name) => navigateTo({ name })"
                     >
                         <div class="relative">
                             <ListboxButton as="template">
-                                <Button class="flex items-center justify-between space-x-2">
-                                    <span class="capitalize"> {{ calendarView }} View </span>
+                                <Button
+                                    class="flex items-center justify-between space-x-2"
+                                >
+                                    <span class="capitalize">
+                                        {{ calendarView }} View
+                                    </span>
 
-                                    <ChevronUpDownIcon class="h-5 w-5 text-white" />
+                                    <ChevronUpDownIcon
+                                        class="h-5 w-5 text-white"
+                                    />
                                 </Button>
                             </ListboxButton>
 
@@ -37,7 +40,9 @@
                                 leave-from-class="opacity-100 scale-100"
                                 leave-to-class="opacity-0 scale-95"
                             >
-                                <ListboxOptions class="absolute mt-1 bg-gray-600 py-1 rounded-lg w-36 text-white z-10">
+                                <ListboxOptions
+                                    class="absolute mt-1 bg-gray-600 py-1 rounded-lg w-36 text-white z-10"
+                                >
                                     <ListboxOption
                                         v-for="(view, key) in views"
                                         :key="key"
@@ -59,10 +64,7 @@
                         </div>
                     </Listbox>
 
-                    <Button
-                        type="button"
-                        @click="viewForward"
-                    >
+                    <Button type="button" @click="viewForward">
                         <ArrowRightIcon class="h-5 w-5 text-white" />
                     </Button>
                 </div>
@@ -77,81 +79,75 @@
                         Stop Time Tracker
                     </Button>
 
-                    <Button
-                        v-else
-                        type="button"
-                        @click="startTimer"
-                    >
+                    <Button v-else type="button" @click="startTimer">
                         Start Time Tracker
                     </Button>
 
-                    <Button
-                        type="button"
-                        color="red"
-                        @click="logout"
-                    >
+                    <Button type="button" color="red" @click="logout">
                         Logout
                     </Button>
                 </div>
             </div>
         </div>
 
-        <div
-            v-if="timeRecords"
-            class="pt-2 grow"
-        >
+        <div v-if="timeRecords" class="pt-2 grow">
             <NuxtPage />
         </div>
     </div>
 </template>
 
 <script setup>
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import {
     Listbox,
     ListboxButton,
     ListboxOptions,
     ListboxOption,
-} from '@headlessui/vue';
-import { ArrowLeftIcon, ArrowRightIcon, CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/24/solid';
+} from "@headlessui/vue";
+import {
+    ArrowLeftIcon,
+    ArrowRightIcon,
+    CheckIcon,
+    ChevronUpDownIcon,
+} from "@heroicons/vue/24/solid";
 
-import TimeRecordStatus from '../enums/TimeRecordStatus';
+import TimeRecordStatus from "../enums/TimeRecordStatus";
 
 definePageMeta({
-    middleware: ['logged-in'],
+    middleware: ["logged-in"],
 });
 
-const user = useState('user');
+const user = useState("user");
 const route = useRoute();
 const calendarViewDate = useCalendarViewDate();
 const calendarView = useCalendarView();
 
 const views = {
-    'dashboard': 'Week View',
-    'dashboard-day': 'Day View',
-    'dashboard-report': 'Report View',
+    dashboard: "Week View",
+    "dashboard-day": "Day View",
+    "dashboard-report": "Report View",
 };
 
-const {
-    data: timeRecords,
-    refresh: refreshTimeRecords,
-} = await useFetchApi('/time-records', {
-    key: 'fetchTimeRecords',
-});
+const { data: timeRecords, refresh: refreshTimeRecords } = await useFetchApi(
+    "/time-records",
+    {
+        key: "fetchTimeRecords",
+    },
+);
 
 if (!user.value) {
-    navigateTo('/');
+    navigateTo("/");
 }
 
-provide('CalendarDashboardContext', {
+provide("CalendarDashboardContext", {
     timeRecords,
     refreshTimeRecords,
 });
 
 async function startTimer() {
     try {
-        await $fetch('/api/time-records', {
-            method: 'POST',
+        await $fetch("/api/time-records", {
+            method: "POST",
         });
 
         refreshTimeRecords();
@@ -163,7 +159,7 @@ async function startTimer() {
 async function stopTimer() {
     try {
         await $fetch(`/api/time-records/${activeTimer.value.id}`, {
-            method: 'PATCH',
+            method: "PATCH",
             body: {
                 stopAt: dayjs().toISOString(),
                 status: TimeRecordStatus.STOPPED,
@@ -179,24 +175,36 @@ async function stopTimer() {
 async function logout() {
     try {
         await $fetch(`/api/logout`, {
-            method: 'POST',
+            method: "POST",
         });
 
         user.value = null;
 
-        navigateTo('/');
+        navigateTo("/");
     } catch (e) {
         alert(e.message);
     }
 }
 
 function viewBack() {
-    calendarViewDate.value = calendarViewDate.value.subtract(1, calendarView.value === 'week' ? 'week' : 'day');
+    calendarViewDate.value = calendarViewDate.value.subtract(
+        1,
+        calendarView.value === "week" ? "week" : "day",
+    );
 }
 
 function viewForward() {
-    calendarViewDate.value = calendarViewDate.value.add(1, calendarView.value === 'week' ? 'week' : 'day');
+    calendarViewDate.value = calendarViewDate.value.add(
+        1,
+        calendarView.value === "week" ? "week" : "day",
+    );
 }
 
-const activeTimer = computed(() => timeRecords.value && timeRecords.value.data.find(record => record.status === TimeRecordStatus.STARTED));
+const activeTimer = computed(
+    () =>
+        timeRecords.value &&
+        timeRecords.value.data.find(
+            (record) => record.status === TimeRecordStatus.STARTED,
+        ),
+);
 </script>

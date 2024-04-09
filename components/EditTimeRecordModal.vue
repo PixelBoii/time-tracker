@@ -1,9 +1,5 @@
 <template>
-    <TransitionRoot
-        as="template"
-        appear
-        :show="open"
-    >
+    <TransitionRoot as="template" appear :show="open">
         <Dialog
             as="div"
             @close="emit('update:open', false)"
@@ -20,9 +16,11 @@
             >
                 <div class="fixed inset-0 bg-black bg-opacity-25" />
             </TransitionChild>
-    
+
             <div class="fixed inset-0 overflow-y-auto">
-                <div class="flex min-h-full items-center justify-center p-4 text-center">
+                <div
+                    class="flex min-h-full items-center justify-center p-4 text-center"
+                >
                     <TransitionChild
                         as="template"
                         enter="duration-300 ease-out"
@@ -43,7 +41,9 @@
                                 X
                             </button>
 
-                            <DialogTitle class="font-semibold text-lg text-white">
+                            <DialogTitle
+                                class="font-semibold text-lg text-white"
+                            >
                                 Edit time record
                             </DialogTitle>
 
@@ -56,41 +56,40 @@
                                 />
 
                                 <div class="mt-3">
-                                    <label class="block text-sm font-medium text-white">
+                                    <label
+                                        class="block text-sm font-medium text-white"
+                                    >
                                         Start at
                                     </label>
 
-                                    <DatePicker
-                                        v-model="form.startAt"
-                                    />
+                                    <DatePicker v-model="form.startAt" />
                                 </div>
 
                                 <div class="mt-3">
-                                    <label class="block text-sm font-medium text-white">
+                                    <label
+                                        class="block text-sm font-medium text-white"
+                                    >
                                         Stop at
                                     </label>
 
-                                    <DatePicker
-                                        v-model="form.stopAt"
-                                    />
+                                    <DatePicker v-model="form.stopAt" />
                                 </div>
                             </div>
 
                             <div class="mt-6">
-                                <label class="block text-sm font-medium text-white mb-1">
+                                <label
+                                    class="block text-sm font-medium text-white mb-1"
+                                >
                                     Notes
                                 </label>
 
-                                <TipTapEditor
-                                    v-model="form.notes"
-                                />
+                                <TipTapEditor v-model="form.notes" />
                             </div>
 
-                            <div class="flex items-center justify-end w-full space-x-2 mt-6">
-                                <Button
-                                    color="red"
-                                    @click="remove"
-                                >
+                            <div
+                                class="flex items-center justify-end w-full space-x-2 mt-6"
+                            >
+                                <Button color="red" @click="remove">
                                     Remove
                                 </Button>
 
@@ -109,7 +108,7 @@
         </Dialog>
     </TransitionRoot>
 </template>
-  
+
 <script setup>
 import {
     TransitionRoot,
@@ -117,10 +116,10 @@ import {
     Dialog,
     DialogPanel,
     DialogTitle,
-} from '@headlessui/vue';
-import dayjs from 'dayjs';
+} from "@headlessui/vue";
+import dayjs from "dayjs";
 
-const emit = defineEmits(['update:open', 'removed', 'saved']);
+const emit = defineEmits(["update:open", "removed", "saved"]);
 
 const props = defineProps({
     open: {
@@ -138,11 +137,11 @@ const form = ref({});
 async function remove() {
     try {
         await $fetch(`/api/time-records/${props.record.id}`, {
-            method: 'DELETE',
+            method: "DELETE",
         });
 
-        emit('removed');
-        emit('update:open', false);
+        emit("removed");
+        emit("update:open", false);
     } catch (e) {
         alert(e.message);
     }
@@ -151,28 +150,36 @@ async function remove() {
 async function save() {
     try {
         await $fetch(`/api/time-records/${props.record.id}`, {
-            method: 'PATCH',
+            method: "PATCH",
             body: {
                 name: form.value.name,
-                startAt: form.value.startAt ? form.value.startAt.toISOString() : null,
-                stopAt: form.value.stopAt ? form.value.stopAt.toISOString() : null,
+                startAt: form.value.startAt
+                    ? form.value.startAt.toISOString()
+                    : null,
+                stopAt: form.value.stopAt
+                    ? form.value.stopAt.toISOString()
+                    : null,
                 notes: form.value.notes,
             },
         });
 
-        emit('saved');
-        emit('update:open', false);
+        emit("saved");
+        emit("update:open", false);
     } catch (e) {
         alert(e.message);
     }
 }
 
-watch(() => props.record, (record) => {
-    form.value = {
-        name: record?.name,
-        startAt: record?.startAt ? dayjs(record.startAt) : null,
-        stopAt: record?.stopAt ? dayjs(record.stopAt) : null,
-        notes: record.notes ?? undefined,
-    };
-}, { immediate: true });
+watch(
+    () => props.record,
+    (record) => {
+        form.value = {
+            name: record?.name,
+            startAt: record?.startAt ? dayjs(record.startAt) : null,
+            stopAt: record?.stopAt ? dayjs(record.stopAt) : null,
+            notes: record.notes ?? undefined,
+        };
+    },
+    { immediate: true },
+);
 </script>

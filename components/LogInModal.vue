@@ -1,9 +1,5 @@
 <template>
-    <TransitionRoot
-        as="template"
-        appear
-        :show="open"
-    >
+    <TransitionRoot as="template" appear :show="open">
         <Dialog
             as="div"
             @close="emit('update:open', false)"
@@ -20,9 +16,11 @@
             >
                 <div class="fixed inset-0 bg-black bg-opacity-25" />
             </TransitionChild>
-    
+
             <div class="fixed inset-0 overflow-y-auto">
-                <div class="flex min-h-full items-center justify-center p-4 text-center">
+                <div
+                    class="flex min-h-full items-center justify-center p-4 text-center"
+                >
                     <TransitionChild
                         as="template"
                         enter="duration-300 ease-out"
@@ -43,7 +41,9 @@
                                 X
                             </button>
 
-                            <DialogTitle class="font-semibold text-lg text-white">
+                            <DialogTitle
+                                class="font-semibold text-lg text-white"
+                            >
                                 Log In
                             </DialogTitle>
 
@@ -51,7 +51,10 @@
                                 v-if="error"
                                 class="bg-red-500 px-3 py-2 rounded-xl mt-4"
                             >
-                                <p class="text-white text-sm"> {{ error }}. Can't make any sense of the error? Me neither. </p>
+                                <p class="text-white text-sm">
+                                    {{ error }}. Can't make any sense of the
+                                    error? Me neither.
+                                </p>
                             </div>
 
                             <form @submit="handleSubmit">
@@ -73,7 +76,9 @@
                                     />
                                 </div>
 
-                                <div class="flex items-center justify-end w-full mt-6">
+                                <div
+                                    class="flex items-center justify-end w-full mt-6"
+                                >
                                     <Button
                                         type="submit"
                                         class="bg-indigo-400 hover:bg-indigo-600 text-white"
@@ -90,7 +95,7 @@
         </Dialog>
     </TransitionRoot>
 </template>
-  
+
 <script setup>
 import {
     TransitionRoot,
@@ -98,9 +103,9 @@ import {
     Dialog,
     DialogPanel,
     DialogTitle,
-} from '@headlessui/vue';
+} from "@headlessui/vue";
 
-const emit = defineEmits(['update:open']);
+const emit = defineEmits(["update:open"]);
 
 const props = defineProps({
     open: {
@@ -109,7 +114,7 @@ const props = defineProps({
     },
 });
 
-const error = ref('');
+const error = ref("");
 
 async function handleSubmit(e) {
     e.preventDefault();
@@ -117,13 +122,13 @@ async function handleSubmit(e) {
     const formData = new FormData(e.target);
 
     try {
-        await $fetch('/api/login', {
-            method: 'POST',
+        await $fetch("/api/login", {
+            method: "POST",
             body: Object.fromEntries(formData),
         });
 
-        emit('update:open', false);
-        navigateTo('/dashboard');
+        emit("update:open", false);
+        navigateTo("/dashboard");
     } catch (err) {
         error.value = err.message;
     }

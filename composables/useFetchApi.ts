@@ -4,7 +4,7 @@ export function useFetchApi(url: string, options = {}) {
     return useFetch(url, {
         baseURL: `${config.public.baseApiUrl}/api`,
         headers: {
-            cookie: useRequestHeaders(['cookie']).cookie ?? '',
+            cookie: useRequestHeaders(["cookie"]).cookie ?? "",
         },
         ...options,
     });

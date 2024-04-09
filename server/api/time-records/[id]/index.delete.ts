@@ -1,23 +1,23 @@
-import { PrismaClient } from '@prisma/client';
-import { getH3User } from '../../../../utils/getH3User';
-
-const prisma = new PrismaClient();
+import { getH3User } from "../../../../utils/getH3User";
+import { getPrismaClient } from "../../../../utils/getPrismaClient";
 
 export default defineEventHandler(async (event) => {
+    const prisma = getPrismaClient(event);
+
     const id = Number(event.context.params?.id);
     const user = await getH3User(event);
 
     if (!user) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Not logged in',
+            statusMessage: "Not logged in",
         });
     }
 
     if (!id) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'No id provided',
+            statusMessage: "No id provided",
         });
     }
 
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     if (!timeRecord) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'No time record found',
+            statusMessage: "No time record found",
         });
     }
 
@@ -42,6 +42,6 @@ export default defineEventHandler(async (event) => {
     });
 
     return {
-        message: 'Time record deleted',
+        message: "Time record deleted",
     };
 });

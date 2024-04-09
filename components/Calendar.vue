@@ -14,7 +14,11 @@
                     :key="`hour-${hour}`"
                     class="flex items-start justify-center text-gray-200 text-sm font-semibold w-full"
                 >
-                    {{ dayjs().hour(hour - 1).format('HH') }}:00
+                    {{
+                        dayjs()
+                            .hour(hour - 1)
+                            .format("HH")
+                    }}:00
                 </div>
             </div>
         </div>
@@ -28,16 +32,34 @@
         >
             <div class="h-[3rem]">
                 <p class="text-gray-300 text-xs font-semibold text-center">
-                    {{ startDate.clone().add(index - 1, 'days').format('dddd') }} ({{ getHoursForDay(startDate.clone().add(index - 1, 'days')) }})
+                    {{
+                        startDate
+                            .clone()
+                            .add(index - 1, "days")
+                            .format("dddd")
+                    }}
+                    ({{
+                        getHoursForDay(
+                            startDate.clone().add(index - 1, "days"),
+                        )
+                    }})
                 </p>
 
                 <div
                     class="h-6 w-6 rounded-full text-xs flex justify-center items-center text-white mx-auto mt-1 font-semibold"
                     :class="{
-                        'bg-indigo-500': startDate.clone().add(index - 1, 'days').isSame(dayjs(), 'day'),
+                        'bg-indigo-500': startDate
+                            .clone()
+                            .add(index - 1, 'days')
+                            .isSame(dayjs(), 'day'),
                     }"
                 >
-                    {{ startDate.clone().add(index - 1, 'days').format('D') }}
+                    {{
+                        startDate
+                            .clone()
+                            .add(index - 1, "days")
+                            .format("D")
+                    }}
                 </div>
             </div>
 
@@ -49,16 +71,15 @@
                         'border-t border-gray-700': hour === 1,
                         'border-b border-gray-700': hour !== 24,
                     }"
-                >
-                </div>
+                ></div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { useInterval } from '@vueuse/core';
-import dayjs from 'dayjs';
+import { useInterval } from "@vueuse/core";
+import dayjs from "dayjs";
 
 const props = defineProps({
     columns: {
@@ -86,12 +107,12 @@ function getHoursForDay(day) {
     dateKey.value;
 
     const minutes = props.timeRecords
-        .filter(record => dayjs(record.startAt).isSame(day, 'day'))
+        .filter((record) => dayjs(record.startAt).isSame(day, "day"))
         .reduce((accumulator, record) => {
             const startAt = dayjs(record.startAt);
             const stopAt = record.stopAt ? dayjs(record.stopAt) : dayjs();
 
-            const minutes = stopAt.diff(startAt, 'minute');
+            const minutes = stopAt.diff(startAt, "minute");
 
             return accumulator + minutes;
         }, 0);
@@ -99,12 +120,13 @@ function getHoursForDay(day) {
     const hours = Math.floor(minutes / 60);
 
     const extraMinutes = minutes % 60;
-    const extraMinutesString = extraMinutes < 10 ? `0${extraMinutes}` : extraMinutes;
+    const extraMinutesString =
+        extraMinutes < 10 ? `0${extraMinutes}` : extraMinutes;
 
-    return `${hours}h${extraMinutesString !== '00' ? ` ${extraMinutesString}min` : ''}`;
+    return `${hours}h${extraMinutesString !== "00" ? ` ${extraMinutesString}min` : ""}`;
 }
 
-provide('CalendarContext', {
+provide("CalendarContext", {
     columns,
     startDate,
 });
