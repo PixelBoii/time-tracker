@@ -7,3 +7,6 @@ pages_build_output_dir = "./dist"
 binding = "DB"
 database_name = "time-tracker"
 database_id = "ab08235e-ea6d-4442-afac-5e6fa9ee9809"
+
+[vars]
+NUXT_API_BASE_URL = "https://pixel-time-tracker.pages.dev"
